@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  react-app:
+    image: react-app-test
+    container_name: react-app
+    ports:
+      - "80:80"
+    restart: always
+
