@@ -28,9 +28,13 @@ pipeline {
 
         stage('Docker Login') {
             steps {
-                withCredentials([string(credentialsId: 'dockerhub-token', variable: 'DOCKER_TOKEN')]) {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USERNAME',
+                    passwordVariable: 'DOCKER_PASSWORD'
+                )]) {
                     sh '''
-                    echo "$DOCKER_TOKEN" | docker login -u ${DOCKER_USER} --password-stdin
+                    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
                     '''
                 }
             }
@@ -73,8 +77,8 @@ pipeline {
             steps {
                 sh '''
                 echo "Deploying application..."
-                docker-compose down || true
-                docker-compose up -d
+                docker compose down || true
+                docker compose up -d
                 '''
             }
         }
